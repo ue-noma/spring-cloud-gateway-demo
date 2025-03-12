@@ -1,0 +1,36 @@
+TOKEN=$(curl -X POST \
+  -d "client_id=test-client" \
+  -d "client_secret=oZsYQOYIziRcsmSjxGtcgYCH0E7v8ear" \
+  -d "grant_type=client_credentials" \
+  "http://localhost:8090/realms/gateway-demo/protocol/openid-connect/token" \
+  | jq -r .access_token)
+
+TOKEN=$(curl \
+  -d "client_id=admin-client" \
+  -d "client_secret=0h4MafLimKGeucJ4j8s1sjLQTPySVJmX" \
+  -d "grant_type=client_credentials" \
+  "http://localhost:8090/realms/gateway-demo/protocol/openid-connect/token" \
+  | jq -r .access_token)
+
+curl -i \
+-H "Authorization: Bearer $TOKEN" \
+http://localhost:8080/red/detail
+
+curl -i \
+-H "Authorization: Bearer $TOKEN" \
+http://localhost:8080/red/update
+
+curl \
+-H "Authorization: Bearer $TOKEN" \
+http://localhost:8090/realms/gateway-demo/protocol/openid-connect/userinfo
+
+curl -i \
+-H "Authorization: Bearer $TOKEN" \
+http://localhost:8080/cache_clear
+
+http://localhost:8090/realms/gateway-demo
+
+
+curl http://localhost:8081/red/detail
+
+curl http://localhost:8080/red/detail
